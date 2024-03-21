@@ -7,6 +7,8 @@ Basic idea: want to leverage to Last.fm API to pull what music I've been listeni
 - [ ] Use the artist + track string to query the iTunes/Apple Music API for _their_ ID
 - [ ] Plop that into the song.link embed API
 
+> Note: the weirdness in the middle steps are because Last.fm returns a [MusicBrainz ID (MBID)](https://musicbrainz.org/doc/MusicBrainz_Identifier) which, from my research, doesn't actually get us anywhere useful.
+
 ## Resources
 
 - https://odesli.co/
