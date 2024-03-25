@@ -3,7 +3,8 @@ import { Routes, Route, Outlet, Link, useParams } from "react-router-dom";
 import Axios from "axios";
 
 export default function App() {
-  const example = "Oasis Wonderwall (Remastered)"
+  const EXAMPLE = "Oasis Wonderwall (Remastered)"
+  const USER = process.env.REACT_APP_LAST_FM_USER || "pinjasaur"
 
   return (
     <div>
@@ -16,12 +17,12 @@ export default function App() {
 
       <p>
         You can also directly put the track (and artist) name in the URL, delimited by pluses, like so:{' '}
-        <Link to={example.split(" ").join("+")}>/{example.split(" ").join("+")}</Link>
+        <Link to={EXAMPLE.split(" ").join("+")}>/{EXAMPLE.split(" ").join("+")}</Link>
       </p>
 
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Index />} />
+          <Route index element={<Index user={USER} />} />
           <Route path=":mbid" element={<Detail />} />
           <Route path="*" element={<NotFound />} />
         </Route>
@@ -48,18 +49,19 @@ function Layout() {
   );
 }
 
-function Index() {
-  const [tracks, setTracks] = useState([])
+function Index({ user }: { user: string }) {
+  const [tracks, setTracks] = useState(undefined as any)
   useEffect(() => {
     ;(async () => {
-      const { data: res } = await Axios.get(`http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${process.env.REACT_APP_LAST_FM_USER}&api_key=${process.env.REACT_APP_LAST_FM_API_KEY}&format=json&period=1month&limit=10`)
+      const { data: res } = await Axios.get(`http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${user}&api_key=${process.env.REACT_APP_LAST_FM_API_KEY}&format=json&period=1month&limit=10`)
       setTracks(res.toptracks.track)
     })()
   }, [])
 
   return (
     <div>
-      <h2>Top Tracks For The Last Month</h2>
+      {(tracks !== undefined) && <>
+      <h2>Top Tracks, 1 Month For <em>{user}</em></h2>
       <ol>
       {tracks.map((track: any) => {
         // _sigh_, not all results have a MusicBrainz ID...
@@ -68,6 +70,7 @@ function Index() {
           </li>
       })}
       </ol>
+      </>}
     </div>
   );
 }
@@ -82,7 +85,6 @@ function Detail() {
     })()
   }, [mbid])
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
 
   return (
     <div>
