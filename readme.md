@@ -3,9 +3,9 @@
 Basic idea: want to leverage to Last.fm API to pull what music I've been listening to for e.g. the past week and generate nice little song.link UI widgets. I've done a bit of research around this before and _I believe_ the (albeit somewhat hacky) steps are:
 
 - [x] Create Last.fm account & API key (open question: is this API key supposed to be secret?)
-- [ ] Grab the JSON API endpoint results for the top tracks for the past week
-- [ ] Use the artist + track string to query the iTunes/Apple Music API for _their_ ID
-- [ ] Plop that into the song.link embed API
+- [x] Grab the JSON API endpoint results for the top tracks for the past week
+- [x] Use the artist + track string to query the iTunes/Apple Music API for _their_ ID
+- [x] Plop that into the song.link embed API
 
 > Note: the weirdness in the middle steps are because Last.fm returns a [MusicBrainz ID (MBID)](https://musicbrainz.org/doc/MusicBrainz_Identifier) which, from my research, doesn't actually get us anywhere useful.
 
@@ -19,10 +19,19 @@ Basic idea: want to leverage to Last.fm API to pull what music I've been listeni
 ## Usage
 
 - `git clone` this to wherever you desire
-- `touch .env.local` with your Last.fm API key under a `REACT_APP_LAST_FM_API_KEY` key
+- `touch .env.local` as explained below
 - `nvm install` grabs the LTS (at the time of writing) Node version
 - `npm install` pulls in dependencies
 - `npm start` spins up the app locally
+
+## `.env.local`
+
+You'll need a [Last.fm API key](https://www.last.fm/api/account/create) and the Last.fm username to be querying against, an example `.env.local` looks like:
+
+```
+REACT_APP_LAST_FM_API_KEY=abc123
+REACT_APP_LAST_FM_USER=pinjasaur
+```
 
 ## Bruno
 

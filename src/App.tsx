@@ -19,17 +19,10 @@ export default function App() {
         <Link to={example.split(" ").join("+")}>/{example.split(" ").join("+")}</Link>
       </p>
 
-      {/* Routes nest inside one another. Nested route paths build upon
-            parent route paths, and nested route elements render inside
-            parent route elements. See the note about <Outlet> below. */}
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Index />} />
           <Route path=":mbid" element={<Detail />} />
-
-          {/* Using path="*"" means "match anything", so this route
-                acts like a catch-all for URLs that we don't have explicit
-                routes for. */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
@@ -40,8 +33,6 @@ export default function App() {
 function Layout() {
   return (
     <div>
-      {/* A "layout route" is a good place to put markup you want to
-          share across all the pages on your site, like navigation. */}
       <nav>
         <ul>
           <li>
@@ -52,9 +43,6 @@ function Layout() {
 
       <hr />
 
-      {/* An <Outlet> renders whatever child route is currently active,
-          so you can think about this <Outlet> as a placeholder for
-          the child routes we defined above. */}
       <Outlet />
     </div>
   );
@@ -64,7 +52,7 @@ function Index() {
   const [tracks, setTracks] = useState([])
   useEffect(() => {
     ;(async () => {
-      const { data: res } = await Axios.get(`http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=pinjasaur&api_key=${process.env.REACT_APP_LAST_FM_API_KEY}&format=json&period=1month&limit=10`)
+      const { data: res } = await Axios.get(`http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${process.env.REACT_APP_LAST_FM_USER}&api_key=${process.env.REACT_APP_LAST_FM_API_KEY}&format=json&period=1month&limit=10`)
       setTracks(res.toptracks.track)
     })()
   }, [])
@@ -75,7 +63,7 @@ function Index() {
       <ol>
       {tracks.map((track: any) => {
         // _sigh_, not all results have a MusicBrainz ID...
-        return <li key={track.mbid || (track.name + " by " + track.artist.name)}>
+        return <li key={track.mbid || track.artist.mbid || (track.name + " by " + track.artist.name)}>
           <Link to={[track.artist.name, track.name].join(" ").split(" ").join("+")}>{track.name} by {track.artist.name}</Link> (played {track.playcount} time{track.playcount > 1 && 's'})
           </li>
       })}
@@ -98,12 +86,12 @@ function Detail() {
 
   return (
     <div>
-      {mbid !== undefined && track !== undefined && <>
+      {(mbid !== undefined && track !== undefined && <>
       <h2>{track.trackName} by {track.artistName}</h2>
 
       <p>Here&rsquo;s what the Song.link widget looks like:</p>
 
-      <iframe width="100%" height="150" src={`https://embed.odesli.co/?url=https%3A%2F%2Fsong.link%2Fi%2F${track.trackId}&theme=${isDarkMode() ? 'dark' : 'light'}`} allowFullScreen sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="clipboard-read; clipboard-write"></iframe>
+      <iframe title={`${track.trackName} by ${track.artistName}`} width="100%" height="150" src={`https://embed.odesli.co/?url=https%3A%2F%2Fsong.link%2Fi%2F${track.trackId}&theme=${isDarkMode() ? 'dark' : 'light'}`} allowFullScreen sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="clipboard-read; clipboard-write"></iframe>
 
       <hr />
 
@@ -114,8 +102,8 @@ function Detail() {
           {`<iframe width="100%" height="150" src="https://embed.odesli.co/?url=https%3A%2F%2Fsong.link%2Fi%2F${track.trackId}&theme=${isDarkMode() ? 'dark' : 'light'}" allowfullscreen sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="clipboard-read; clipboard-write"></iframe>`}
         </code>
       </pre>
-      </> || <>
-      <p>Hmmm&hellip;looks like that didn't work. Try again or <Link to="/">go home</Link>.</p>
+      </>) || <>
+      <p>Hmmm&hellip;looks like that didn&rsquo;t work. Try again or <Link to="/">go home</Link>.</p>
       </>}
     </div>
   );
