@@ -18,10 +18,11 @@ Basic idea: want to leverage to Last.fm API to pull what music I've been listeni
 
 ## Usage
 
-- `nvm install`
-- `npm install`
-- `npm start`
-- TODO: .env or similar for API key?
+- `git clone` this to wherever you desire
+- `touch .env.local` with your Last.fm API key under a `REACT_APP_LAST_FM_API_KEY` key
+- `nvm install` grabs the LTS (at the time of writing) Node version
+- `npm install` pulls in dependencies
+- `npm start` spins up the app locally
 
 ## Bruno
 
@@ -30,9 +31,10 @@ For this project I'm trying out [Bruno](https://www.usebruno.com/) which is an A
 If you're on a fresh clone you might need to create the `.env` symlink for Bruno from the CRA-compliant `.env.local`:
 
 ```sh
-ln -s $PWD/.env.local bruno/.env
+cd bruno
+ln -s ../.env.local .env
+cd -
 ```
-
 
 <details>
 <summary>Copypasta from CRA install</summary>
