@@ -3,14 +3,16 @@ import { Routes, Route, Outlet, Link } from "react-router-dom";
 export default function App() {
   return (
     <div>
-      <h1>Basic Example</h1>
+      <h1>Last.fm & Song.link Integration</h1>
 
       <p>
-        This example demonstrates some of the core features of React Router
-        including nested <code>&lt;Route&gt;</code>s,{" "}
-        <code>&lt;Outlet&gt;</code>s, <code>&lt;Link&gt;</code>s, and using a
-        "*" route (aka "splat route") to render a "not found" page when someone
-        visits an unrecognized URL.
+        Pull in recent tracks from the Last.fm API, query the iTunes Search API
+        for a track ID, and finally build a Song.link embed UI widget.
+      </p>
+
+      <p>
+        If you happen to know the <Link to="https://musicbrainz.org/doc/MusicBrainz_Identifier">MusicBrainz ID</Link>{' '}
+        you can use that in the URL directly e.g. <code>/musicbrainz-id-goes-here</code>.
       </p>
 
       {/* Routes nest inside one another. Nested route paths build upon
@@ -18,14 +20,13 @@ export default function App() {
             parent route elements. See the note about <Outlet> below. */}
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route index element={<Index />} />
+          <Route path=":mbid" element={<Detail />} />
 
           {/* Using path="*"" means "match anything", so this route
                 acts like a catch-all for URLs that we don't have explicit
                 routes for. */}
-          <Route path="*" element={<NoMatch />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </div>
@@ -42,15 +43,6 @@ function Layout() {
           <li>
             <Link to="/">Home</Link>
           </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
-          <li>
-            <Link to="/nothing-here">Nothing Here</Link>
-          </li>
         </ul>
       </nav>
 
@@ -64,36 +56,28 @@ function Layout() {
   );
 }
 
-function Home() {
+function Index() {
   return (
     <div>
-      <h2>Home</h2>
+      <h2>Index</h2>
     </div>
   );
 }
 
-function About() {
+function Detail() {
   return (
     <div>
-      <h2>About</h2>
+      <h2>Detail</h2>
     </div>
   );
 }
 
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
-  );
-}
-
-function NoMatch() {
+function NotFound() {
   return (
     <div>
       <h2>Nothing to see here!</h2>
       <p>
-        <Link to="/">Go to the home page</Link>
+        <Link to="/">Go home</Link>
       </p>
     </div>
   );

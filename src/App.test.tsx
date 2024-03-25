@@ -5,6 +5,6 @@ import App from './App';
 
 test('renders learn react link', () => {
   render(<App />, {wrapper: BrowserRouter});
-  const linkElement = screen.getByText(/learn react/i);
+  const linkElement = screen.getByText(/musicbrainz id/i);
   expect(linkElement).toBeInTheDocument();
 });
