@@ -56,8 +56,12 @@ function Index({ user }: { user: string }) {
       const { data: res } = await Axios.get(`http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${user}&api_key=${process.env.REACT_APP_LAST_FM_API_KEY}&format=json&period=1month&limit=10`)
       setTracks(res.toptracks.track)
     })()
-  }, [])
+  })
 
+  return <IndexComponent user={user} tracks={tracks} />
+}
+
+function IndexComponent({ tracks, user }: { tracks: any, user: string }) {
   return (
     <div>
       {(tracks !== undefined) && <>
@@ -72,7 +76,7 @@ function Index({ user }: { user: string }) {
       </ol>
       </>}
     </div>
-  );
+  )
 }
 
 function Detail() {
@@ -84,8 +88,12 @@ function Detail() {
       setTrack(res.results[0])
     })()
   }, [mbid])
-  const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
+  return <DetailComponent mbid={mbid} track={track} isDarkMode={isDarkMode()} />
+}
+
+function DetailComponent({mbid, track, isDarkMode}: { mbid?: string, track: any, isDarkMode: boolean}) {
   return (
     <div>
       {(mbid !== undefined && track !== undefined && <>
@@ -93,7 +101,7 @@ function Detail() {
 
       <p>Here&rsquo;s what the Song.link widget looks like:</p>
 
-      <iframe title={`${track.trackName} by ${track.artistName}`} width="100%" height="150" src={`https://embed.odesli.co/?url=https%3A%2F%2Fsong.link%2Fi%2F${track.trackId}&theme=${isDarkMode() ? 'dark' : 'light'}`} allowFullScreen sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="clipboard-read; clipboard-write"></iframe>
+      <iframe title={`${track.trackName} by ${track.artistName}`} width="100%" height="150" src={`https://embed.odesli.co/?url=https%3A%2F%2Fsong.link%2Fi%2F${track.trackId}&theme=${isDarkMode ? 'dark' : 'light'}`} allowFullScreen sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="clipboard-read; clipboard-write"></iframe>
 
       <hr />
 
@@ -101,14 +109,14 @@ function Detail() {
 
       <pre>
         <code>
-          {`<iframe width="100%" height="150" src="https://embed.odesli.co/?url=https%3A%2F%2Fsong.link%2Fi%2F${track.trackId}&theme=${isDarkMode() ? 'dark' : 'light'}" allowfullscreen sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="clipboard-read; clipboard-write"></iframe>`}
+          {`<iframe width="100%" height="150" src="https://embed.odesli.co/?url=https%3A%2F%2Fsong.link%2Fi%2F${track.trackId}&theme=${isDarkMode ? 'dark' : 'light'}" allowfullscreen sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="clipboard-read; clipboard-write"></iframe>`}
         </code>
       </pre>
       </>) || <>
       <p>Hmmm&hellip;looks like that didn&rsquo;t work. Try again or <Link to="/">go home</Link>.</p>
       </>}
     </div>
-  );
+  )
 }
 
 function NotFound() {
