@@ -23,6 +23,16 @@ Basic idea: want to leverage to Last.fm API to pull what music I've been listeni
 - `npm start`
 - TODO: .env or similar for API key?
 
+## Bruno
+
+For this project I'm trying out [Bruno](https://www.usebruno.com/) which is an API client similar to Postman or Insomnia, except it all lives locally in the repo in the `bruno/` directory.
+
+If you're on a fresh clone you might need to create the `.env` symlink for Bruno from the CRA-compliant `.env.local`:
+
+```sh
+ln -s $PWD/.env.local bruno/.env
+```
+
 
 <details>
 <summary>Copypasta from CRA install</summary>
