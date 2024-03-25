@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Link } from "react-router-dom";
+import Axios from "axios";
 
 export default function App() {
   return (
@@ -6,8 +8,8 @@ export default function App() {
       <h1>Last.fm & Song.link Integration</h1>
 
       <p>
-        Pull in recent tracks from the Last.fm API, query the iTunes Search API
-        for a track ID, and finally build a Song.link embed UI widget.
+        Pull in recent top tracks from the Last.fm API, query the iTunes Search
+        API for a track ID, and finally build a Song.link embed UI widget.
       </p>
 
       <p>
@@ -57,9 +59,24 @@ function Layout() {
 }
 
 function Index() {
+  const [tracks, setTracks] = useState([])
+  useEffect(() => {
+    ;(async () => {
+      const { data: res } = await Axios.get(`http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=pinjasaur&api_key=${process.env.REACT_APP_LAST_FM_API_KEY}&format=json&period=1month&limit=10`)
+      setTracks(res.toptracks.track)
+    })()
+  }, [])
+
   return (
     <div>
       <h2>Index</h2>
+      <ol>
+      {tracks.map((track: any) => {
+        return <li>
+          <Link to={[track.artist.name, track.name].join(" ").split(" ").join("+")}>{track.name} by {track.artist.name}</Link> (played {track.playcount} time{track.playcount > 1 && 's'})
+          </li>
+      })}
+      </ol>
     </div>
   );
 }

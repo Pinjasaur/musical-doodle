@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=pinjasaur&api_key={{LAST_FM_API_KEY}}&format=json&period=1month
+  url: http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=pinjasaur&api_key={{LAST_FM_API_KEY}}&format=json&period=1month&limit=10
   body: none
   auth: none
 }
@@ -16,4 +16,5 @@ query {
   api_key: {{LAST_FM_API_KEY}}
   format: json
   period: 1month
+  limit: 10
 }
