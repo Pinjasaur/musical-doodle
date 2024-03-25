@@ -11,11 +11,20 @@ Basic idea: want to leverage to Last.fm API to pull what music I've been listeni
 
 ## Usage
 
+### Setup
+
 -   `git clone` this to wherever you desire
 -   `.env.local` as explained below
 -   `nvm install` grabs the LTS (at the time of writing) Node version
 -   `npm install` pulls in dependencies
+
+### Running
+
 -   `npm start` spins up the app locally
+
+### Testing
+
+-   `npm test` runs the minimal test suite
 
 ## `.env.local`
 
