@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Link, useParams } from "react-router-dom";
 import Axios from "axios";
+import { Result, Track } from "./types";
 
 export default function App() {
   const EXAMPLE = "Oasis Wonderwall (Remastered)"
@@ -50,23 +51,28 @@ function Layout() {
 }
 
 function Index({ user }: { user: string }) {
-  const [tracks, setTracks] = useState(undefined as any)
+  const [tracks, setTracks] = useState<Track[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
   useEffect(() => {
     ;(async () => {
       const { data: res } = await Axios.get(`http://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${user}&api_key=${process.env.REACT_APP_LAST_FM_API_KEY}&format=json&period=1month&limit=10`)
       setTracks(res.toptracks.track)
+      setLoading(false)
     })()
   })
+
+  if (loading)
+    return <></>
 
   return <IndexComponent user={user} tracks={tracks} />
 }
 
-function IndexComponent({ tracks, user }: { tracks: any, user: string }) {
+export function IndexComponent({ tracks, user }: { tracks: Track[], user: string }) {
   return (
     <div>
-      {(tracks !== undefined) && <>
+      {(tracks.length && tracks.length > 0) && <>
       <h2>Top Tracks, 1 Month For <em>{user}</em></h2>
-      <ol>
+      <ol data-testid="tracks">
       {tracks.map((track: any) => {
         // _sigh_, not all results have a MusicBrainz ID...
         return <li key={track.mbid || track.artist.mbid || (track.name + " by " + track.artist.name)}>
@@ -81,21 +87,26 @@ function IndexComponent({ tracks, user }: { tracks: any, user: string }) {
 
 function Detail() {
   const { mbid } = useParams()
-  const [track, setTrack] = useState(undefined as any)
+  const [track, setTrack] = useState<Result>()
+  const [loading, setLoading] = useState<boolean>(true)
   useEffect(() => {
     ;(async () => {
       const { data: res } = await Axios.get(`https://itunes.apple.com/search?term=${encodeURIComponent(mbid!.split("+").join(" "))}&country=US&entity=song`)
       setTrack(res.results[0])
+      setLoading(false)
     })()
   }, [mbid])
   const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
+  if (loading)
+    return <></>
+
   return <DetailComponent mbid={mbid} track={track} isDarkMode={isDarkMode()} />
 }
 
-function DetailComponent({mbid, track, isDarkMode}: { mbid?: string, track: any, isDarkMode: boolean}) {
+export function DetailComponent({mbid, track, isDarkMode}: { mbid?: string, track?: Result, isDarkMode: boolean}) {
   return (
-    <div>
+    <div data-testid="track">
       {(mbid !== undefined && track !== undefined && <>
       <h2>{track.trackName} by {track.artistName}</h2>
 

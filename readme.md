@@ -7,19 +7,12 @@ Basic idea: want to leverage to Last.fm API to pull what music I've been listeni
 - [x] Use the artist + track string to query the iTunes/Apple Music API for _their_ ID
 - [x] Plop that into the song.link embed API
 
-> Note: the weirdness in the middle steps are because Last.fm returns a [MusicBrainz ID (MBID)](https://musicbrainz.org/doc/MusicBrainz_Identifier) which, from my research, doesn't actually get us anywhere useful.
-
-## Resources
-
-- https://odesli.co/
-    - Service behind album.link, song.link
-- https://www.last.fm/api
-    - Last.fm API docs
+> Note: the weirdness in the middle steps are because Last.fm returns a [MusicBrainz ID (MBID)](https://musicbrainz.org/doc/MusicBrainz_Identifier) which, from my research, doesn't actually get us anywhere useful. And, in practice, not all tracks have a MusicBrainz ID so can't rely on it for anything useful. In an ideal world, would figure out how to convert to a Spotify Track URI but this slightly hacky solution is fine for now.
 
 ## Usage
 
 - `git clone` this to wherever you desire
-- `touch .env.local` as explained below
+- `.env.local` as explained below
 - `nvm install` grabs the LTS (at the time of writing) Node version
 - `npm install` pulls in dependencies
 - `npm start` spins up the app locally
@@ -28,8 +21,9 @@ Basic idea: want to leverage to Last.fm API to pull what music I've been listeni
 
 You'll need a [Last.fm API key](https://www.last.fm/api/account/create) and the Last.fm username to be querying against, an example `.env.local` looks like:
 
-```
+```sh
 REACT_APP_LAST_FM_API_KEY=abc123
+# optional, defaults to:
 REACT_APP_LAST_FM_USER=pinjasaur
 ```
 
@@ -44,6 +38,13 @@ cd bruno
 ln -s ../.env.local .env
 cd -
 ```
+
+## Resources
+
+- https://odesli.co/
+    - Service behind album.link, song.link
+- https://www.last.fm/api
+    - Last.fm API docs
 
 <details>
 <summary>Copypasta from CRA install</summary>
